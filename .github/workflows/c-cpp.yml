@@ -18,26 +18,25 @@ jobs:
           - os: macos-latest
             build-command: clang++ -std=c++17 main.cpp -o main -lcurl
           - os: windows-latest
-            build-command: cl main.cpp /EHsc /std:c++17 /Fe:main.exe libcurl.lib
+            build-command: cl main.cpp /EHsc /std:c++17 /Fe:main.exe
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Install dependencies (Linux)
-      if: matrix.os == 'ubuntu-latest'
+      if: runner.os == 'Linux'
       run: |
         sudo apt update
         sudo apt install -y build-essential libcurl4-openssl-dev libjsoncpp-dev
 
     - name: Install dependencies (macOS)
-      if: matrix.os == 'macos-latest'
+      if: runner.os == 'macOS'
       run: brew install curl jsoncpp
 
     - name: Install dependencies (Windows)
-      if: matrix.os == 'windows-latest'
+      if: runner.os == 'Windows'
       shell: powershell
       run: |
-        # Use vcpkg for Windows
         git clone https://github.com/Microsoft/vcpkg.git C:\vcpkg
         C:\vcpkg\bootstrap-vcpkg.bat
         C:\vcpkg\vcpkg install curl:x64-windows jsoncpp:x64-windows
@@ -46,14 +45,14 @@ jobs:
 
     - name: Build
       run: ${{ matrix.build-command }}
-      shell: ${{ matrix.os == 'windows-latest' && 'powershell' || 'bash' }}
+      shell: ${{ runner.os == 'Windows' && 'powershell' || 'bash' }}
 
     - name: Test
-      run: |
-        ${{ matrix.os == 'windows-latest' && './main.exe' || './main' }}
+      run: ${{ runner.os == 'Windows' && './main.exe' || './main' }}
+      shell: ${{ runner.os == 'Windows' && 'powershell' || 'bash' }}
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: build-${{ matrix.os }}
+        name: build-${{ runner.os }}
         path: main*
