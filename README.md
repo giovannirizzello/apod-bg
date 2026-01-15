@@ -2,6 +2,46 @@
 
 This program automatically downloads the Astronomy Picture of the Day (APOD) from NASA and sets it as your desktop background.
 
+
+## Features
+
+- ✅ Automatically detects operating system (Windows, macOS, Linux)
+- ✅ Downloads HD image when available
+- ✅ Archives downloaded images without duplicates
+- ✅ Automatically configures daily execution
+- ✅ Supports GNOME and KDE on Linux
+- ✅ Handles cases where today's APOD is a video (doesn't set it)
+
+## Image Archive
+
+Images are saved to:
+- **macOS/Linux**: `~/apod_archive/`
+- **Windows**: `%USERPROFILE%\apod_archive\`
+
+The filename is derived from the APOD image title. The program automatically prevents duplicate saves by checking if the file already exists.
+
+## Automation
+
+### macOS/Linux - Crontab
+Configured automatically on first run with `autorun=1`. To modify the time:
+```bash
+crontab -e
+# Edit the line:
+# 0 9 * * * /full/path/apod-bg
+```
+
+### Windows - Task Scheduler
+A shortcut is created in the Startup folder.
+
+## Uninstall
+
+### macOS/Linux
+Remove the cron job:
+```bash
+crontab -e
+# Delete the line containing apod-bg
+```
+
 ## Requirements for building
 
 ### macOS
@@ -98,44 +138,6 @@ The program uses `DEMO_KEY` which has request limits. For frequent use:
 2. Register for free to get your own API key
 3. Replace `DEMO_KEY` in main.cpp with your key
 
-## Features
-
-- ✅ Automatically detects operating system (Windows, macOS, Linux)
-- ✅ Downloads HD image when available
-- ✅ Archives downloaded images without duplicates
-- ✅ Automatically configures daily execution
-- ✅ Supports GNOME and KDE on Linux
-- ✅ Handles cases where today's APOD is a video (doesn't set it)
-
-## Image Archive
-
-Images are saved to:
-- **macOS/Linux**: `~/apod_archive/`
-- **Windows**: `%USERPROFILE%\apod_archive\`
-
-The filename is derived from the APOD image title. The program automatically prevents duplicate saves by checking if the file already exists.
-
-## Automation
-
-### macOS/Linux - Crontab
-Configured automatically on first run with `autorun=1`. To modify the time:
-```bash
-crontab -e
-# Edit the line:
-# 0 9 * * * /full/path/apod-bg
-```
-
-### Windows - Task Scheduler
-A shortcut is created in the Startup folder.
-
-## Uninstall
-
-### macOS/Linux
-Remove the cron job:
-```bash
-crontab -e
-# Delete the line containing apod-bg
-```
 
 ### Windows
 Delete the shortcut from the Startup folder
