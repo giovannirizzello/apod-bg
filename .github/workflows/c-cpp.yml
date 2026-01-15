@@ -1,0 +1,47 @@
+name: Cross-Platform C++ Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            compiler: gcc
+            build-command: g++ -std=c++17 main.cpp -o main
+          - os: macos-latest
+            compiler: clang
+            build-command: clang++ -std=c++17 main.cpp -o main
+          - os: windows-latest
+            compiler: msvc
+            build-command: cl main.cpp /EHsc /std:c++17 /Fe:main.exe
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup compiler
+      run: |
+        if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+          sudo apt update && sudo apt install -y build-essential
+        elif [ "${{ matrix.os }}" == "windows-latest" ]; then
+          echo "MSVC available by default"
+        fi
+
+    - name: Build
+      run: ${{ matrix.build-command }}
+
+    - name: Test
+      run: ./main  # Adjust for Windows: main.exe
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-${{ matrix.os }}
+        path: main*
