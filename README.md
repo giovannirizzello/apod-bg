@@ -2,7 +2,7 @@
 
 This program automatically downloads the Astronomy Picture of the Day (APOD) from NASA and sets it as your desktop background.
 
-## Requirements
+## Requirements for building
 
 ### macOS
 ```bash
